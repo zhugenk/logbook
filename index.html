@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Log Kerja Isakuiki</title>
+<title>Log Kerja Harian</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -75,6 +75,9 @@
   .tpl-item .x{cursor:pointer;color:var(--rust);font-size:16px;background:none;border:none;padding:0 4px;flex-shrink:0;}
   .timeline{position:relative;padding-left:34px;}
   .timeline:before{content:"";position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:repeating-linear-gradient(var(--line),var(--line) 4px,transparent 4px,transparent 8px);}
+  .section-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 10px 2px;display:flex;align-items:center;gap:6px;}
+  .section-label.overdue-label{color:var(--rust);}
+  .section-label.today-label{color:var(--ink-soft);}
   .entry{position:relative;margin-bottom:14px;}
   .entry:before{content:"";position:absolute;left:-28px;top:16px;width:9px;height:9px;border-radius:50%;background:var(--paper-card);border:2px solid var(--ink-soft);}
   .entry.done:before{background:var(--teal);border-color:var(--teal);}
@@ -86,6 +89,10 @@
   .entry.postponed .entry-card{background:var(--rust-soft);border-color:#e4c5b9;}
   .entry.cancelled .entry-card{background:#EFEDE8;opacity:.75;}
   .entry.progress .entry-card{background:var(--amber-soft);border-color:#e6cd97;}
+  /* Tugas belum selesai & lewat tanggal - ditandai merah tegas */
+  .entry.carry-overdue:before{background:var(--rust);border-color:var(--rust);box-shadow:0 0 0 3px var(--rust-soft);}
+  .entry.carry-overdue .entry-card{background:var(--rust-soft);border:1.5px solid var(--rust);}
+  .overdue-carry-badge{display:inline-flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.03em;background:var(--rust);color:#fff;}
   .entry-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;}
   .entry-time{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:var(--ink-soft);flex-shrink:0;}
   .entry-name{font-size:14.5px;font-weight:600;flex:1;line-height:1.35;min-width:120px;}
@@ -133,7 +140,7 @@
 
   <header>
     <div class="eyebrow">Buku Log · Aktivitas Kerja</div>
-    <h1>Log Kerja Isakuiki</h1>
+    <h1>Log Kerja Harian</h1>
     <div class="view-tabs">
       <button class="view-tab-btn active" id="tabViewBtn">📋 Timeline Hari Ini</button>
       <button class="view-tab-btn" id="tabInputBtn">✏️ Input &amp; Tugas Rutin</button>
@@ -186,6 +193,14 @@
       <p id="searchEmptyText">Tidak ada tugas yang cocok.</p>
     </div>
 
+    <div id="overdueSection" style="display:none;">
+      <div class="section-label overdue-label">⚠ Tugas Lewat Tanggal (Belum Selesai)</div>
+      <div class="timeline" id="overdueTimeline"></div>
+    </div>
+
+    <div id="todaySectionLabelWrap" style="display:none;">
+      <div class="section-label today-label" id="todaySectionLabel">Hari Ini</div>
+    </div>
     <div class="timeline" id="timeline"></div>
     <div class="empty-state" id="emptyState" style="display:none;">
       <div class="glyph">□</div>
@@ -266,16 +281,16 @@
       </div>
     </details>
 
-    <details class="tpl" open id="settingsDetails">
+    <details class="tpl" id="settingsDetails">
       <summary>Pengaturan Sinkronisasi Google Sheets (Database Utama)</summary>
       <div class="card" style="margin-top:0;">
-        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:0;">Aplikasi ini <b>membaca dan menulis langsung ke Google Sheets</b> — tidak ada penyimpanan lain, jadi langkah ini wajib sebelum bisa memakai aplikasi.</p>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:0;">Aplikasi ini <b>membaca dan menulis langsung ke Google Sheets</b>. URL Web App sudah ditanam sebagai bawaan (default) di dalam kode, jadi aplikasi ini otomatis terhubung di perangkat mana pun tanpa perlu tempel URL lagi. Ubah kolom di bawah hanya jika Anda ingin memakai spreadsheet lain.</p>
         <ol class="steps">
           <li>Buka Google Sheets baru (boleh kosong).</li>
           <li>Menu <b>Extensions → Apps Script</b>.</li>
           <li>Hapus kode default, tempel kode di bawah ini.</li>
           <li>Klik <b>Deploy → New deployment → Web app</b>. Pilih "Execute as: Me" dan "Who has access: Anyone". (Kalau sudah pernah deploy sebelumnya, pilih "Manage deployments" → edit → naikkan versi baru.)</li>
-          <li>Salin URL Web App, tempel ke kolom di bawah, klik Simpan.</li>
+          <li>Salin URL Web App, tempel ke kolom di bawah, klik Simpan (opsional — hanya jika ganti spreadsheet).</li>
         </ol>
         <div class="code-box" id="appsScriptCode">function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -359,7 +374,7 @@ function doPost(e) {
           <button class="btn btn-primary btn-half" id="settingsSaveBtn">Simpan &amp; Muat Data</button>
           <button class="btn btn-ghost btn-half" id="syncNowBtn">Muat Ulang dari Sheets</button>
         </div>
-        <p style="font-size:11px;color:var(--ink-soft);">Catatan: URL disimpan di penyimpanan browser perangkat ini (localStorage). Kalau buka dari browser/perangkat lain, isi ulang URL sekali.</p>
+        <p style="font-size:11px;color:var(--ink-soft);">URL bawaan sudah otomatis dipakai di semua perangkat. Kolom ini hanya untuk override manual, dan tetap tersimpan di penyimpanan browser perangkat ini bila diubah.</p>
       </div>
     </details>
   </div>
@@ -368,6 +383,11 @@ function doPost(e) {
 </div>
 
 <script>
+/* URL Apps Script default — sudah ditanam di kode, otomatis dipakai di perangkat mana pun
+   tanpa perlu tempel manual. Bisa dioverride lewat panel Pengaturan jika suatu saat
+   pindah ke spreadsheet lain. */
+const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwBV6oaOgU0bdV88vSbzjg9dqzM6rGw6T5EpClzZ6IJkMEQmD4z5F1DKfyS0vEWWmA/exec';
+
 const STATUS = { progress:{label:'Berlangsung'}, done:{label:'Selesai'}, postponed:{label:'Ditunda'}, cancelled:{label:'Batal'} };
 const PRIORITY = { tinggi:{label:'Tinggi'}, sedang:{label:'Sedang'}, rendah:{label:'Rendah'} };
 
@@ -384,8 +404,13 @@ function todayStr(){
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
 function loadSettingsLocal(){
-  try{ const raw = localStorage.getItem('logkerja_settings'); return raw ? JSON.parse(raw) : {sheetsUrl:''}; }
-  catch(e){ return {sheetsUrl:''}; }
+  try{
+    const raw = localStorage.getItem('logkerja_settings');
+    const parsed = raw ? JSON.parse(raw) : {sheetsUrl:''};
+    if(!parsed.sheetsUrl){ parsed.sheetsUrl = DEFAULT_SHEETS_URL; }
+    return parsed;
+  }
+  catch(e){ return {sheetsUrl: DEFAULT_SHEETS_URL}; }
 }
 function saveSettingsLocal(s){
   try{ localStorage.setItem('logkerja_settings', JSON.stringify(s)); }catch(e){}
@@ -498,6 +523,18 @@ function exportAllCSV(){
   downloadFile('log-kerja-'+todayStr()+'.csv', csv, 'text/csv;charset=utf-8');
 }
 
+/* ---------- TUGAS BELUM SELESAI YANG LEWAT TANGGAL ---------- */
+// Tugas berstatus "Berlangsung" atau "Ditunda" dari tanggal SEBELUM hari ini.
+// Ditampilkan otomatis di halaman utama (hanya saat melihat tanggal hari ini),
+// tanpa perlu menyalinnya lebih dulu. Data aslinya tidak diubah/diduplikasi;
+// tugas tetap tercatat di tanggal aslinya di Sheets.
+function getOverdueCarryTasks(){
+  const today = todayStr();
+  return allTasks
+    .filter(function(t){ return t.date < today && (t.status==='progress' || t.status==='postponed'); })
+    .sort(function(a,b){ return a.date.localeCompare(b.date) || (a.time||'99:99').localeCompare(b.time||'99:99'); });
+}
+
 /* ---------- RENDER TIMELINE ---------- */
 function render(){
   document.getElementById('datePicker').value = currentDate;
@@ -522,17 +559,48 @@ function renderProgress(){
 function renderTimeline(){
   const wrap = document.getElementById('timeline');
   const empty = document.getElementById('emptyState');
+  const overdueSection = document.getElementById('overdueSection');
+  const overdueWrap = document.getElementById('overdueTimeline');
+  const todayLabelWrap = document.getElementById('todaySectionLabelWrap');
+  const todayLabel = document.getElementById('todaySectionLabel');
+
   wrap.innerHTML = '';
-  if(tasksCache.length === 0){ empty.style.display = 'block'; return; }
+  overdueWrap.innerHTML = '';
+
+  const isTodayView = currentDate === todayStr();
+  const overdueTasks = isTodayView ? getOverdueCarryTasks() : [];
+
+  if(overdueTasks.length){
+    overdueSection.style.display = 'block';
+    overdueTasks.forEach(function(task){
+      overdueWrap.appendChild(buildEntryEl(task, task.date, true, true));
+    });
+  } else {
+    overdueSection.style.display = 'none';
+  }
+
+  if(tasksCache.length === 0){
+    empty.style.display = 'block';
+    todayLabelWrap.style.display = 'none';
+    return;
+  }
   empty.style.display = 'none';
+
+  if(overdueTasks.length){
+    todayLabelWrap.style.display = 'block';
+    todayLabel.textContent = fmtDateLabel(currentDate);
+  } else {
+    todayLabelWrap.style.display = 'none';
+  }
+
   tasksCache.forEach(function(task){
-    wrap.appendChild(buildEntryEl(task, currentDate, false));
+    wrap.appendChild(buildEntryEl(task, currentDate, false, false));
   });
 }
 
-function buildEntryEl(task, dateStr, showDate){
+function buildEntryEl(task, dateStr, showDate, isOverdueCarry){
   const entry = document.createElement('div');
-  entry.className = 'entry '+task.status;
+  entry.className = 'entry '+task.status+(isOverdueCarry ? ' carry-overdue' : '');
   const priority = task.priority || 'sedang';
   const overdue = task.deadline && task.deadline < todayStr() && task.status!=='done' && task.status!=='cancelled';
   const elapsedNum = parseFloat(task.elapsed)||0;
@@ -545,6 +613,7 @@ function buildEntryEl(task, dateStr, showDate){
       '<div class="entry-top">'+
         '<span class="entry-time">'+(task.time || '--:--')+'</span>'+
         '<span class="entry-name">'+escapeHtml(task.name)+'</span>'+
+        (isOverdueCarry ? '<span class="overdue-carry-badge">⚠ Lewat Tanggal</span>' : '')+
         '<span class="status-badge '+task.status+'">'+statusInfo.label+'</span>'+
       '</div>'+
       '<div class="entry-meta-row">'+
@@ -623,16 +692,20 @@ function runSearch(){
   const empty = document.getElementById('searchEmpty');
   const meta = document.getElementById('searchMeta');
   const clearBtn = document.getElementById('clearSearchBtn');
+  const overdueSection = document.getElementById('overdueSection');
+  const todayLabelWrap = document.getElementById('todaySectionLabelWrap');
 
   if(!query){
     timeline.style.display = 'none'; empty.style.display = 'none'; meta.style.display = 'none'; clearBtn.style.display = 'none';
     document.getElementById('timeline').style.display = '';
-    if(tasksCache.length === 0) document.getElementById('emptyState').style.display = 'block';
+    renderTimeline();
     return;
   }
 
   document.getElementById('timeline').style.display = 'none';
   document.getElementById('emptyState').style.display = 'none';
+  overdueSection.style.display = 'none';
+  todayLabelWrap.style.display = 'none';
   clearBtn.style.display = '';
 
   const results = allTasks.filter(function(t){ return t.name && t.name.toLowerCase().includes(query); })
@@ -648,7 +721,7 @@ function runSearch(){
     return;
   }
   empty.style.display = 'none'; timeline.style.display = '';
-  results.forEach(function(t){ timeline.appendChild(buildEntryEl(t, t.date, true)); });
+  results.forEach(function(t){ timeline.appendChild(buildEntryEl(t, t.date, true, false)); });
 }
 function clearSearch(){ document.getElementById('searchInput').value = ''; runSearch(); }
 
@@ -838,7 +911,7 @@ document.getElementById('copyCodeBtn').addEventListener('click', function(){
   }).catch(function(){ alert('Gagal menyalin otomatis, silakan salin manual dari kotak kode.'); });
 });
 document.getElementById('settingsSaveBtn').addEventListener('click', async function(){
-  settings.sheetsUrl = document.getElementById('sheetsUrlInput').value.trim();
+  settings.sheetsUrl = document.getElementById('sheetsUrlInput').value.trim() || DEFAULT_SHEETS_URL;
   saveSettingsLocal(settings);
   await refreshFromSheets();
 });
