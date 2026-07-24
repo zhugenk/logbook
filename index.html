@@ -53,11 +53,12 @@
   .card{background:var(--paper-card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:20px;}
   .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:16px;margin:0 0 14px;}
   .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
-  .form-row input[type=text], .form-row select, .form-row input[type=time], .form-row input[type=date], .form-row input[type=url]{
+  .form-row input[type=text], .form-row select, .form-row input[type=time], .form-row input[type=date], .form-row input[type=url], .form-row input[type=number]{
     font-family:'Inter',sans-serif;font-size:13.5px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:9px 11px;color:var(--ink);flex:1;min-width:110px;
   }
   .form-row input[type=time]{flex:0 0 105px;font-family:'JetBrains Mono',monospace;}
   .form-row input[type=date]{flex:0 0 150px;font-family:'JetBrains Mono',monospace;}
+  .form-row input[type=number]{font-family:'JetBrains Mono',monospace;}
   select{flex:0 0 130px;}
   .btn{font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;border:none;border-radius:7px;padding:9px 16px;cursor:pointer;transition:opacity .15s, transform .1s;}
   .btn:active{transform:scale(.97);}
@@ -155,7 +156,7 @@
   .history-entry:active{transform:scale(.99);}
   .history-entry .h-chevron{margin-left:auto;color:var(--ink-soft);font-size:14px;flex-shrink:0;align-self:center;}
 
-  /* --- Modal detail riwayat --- */
+  /* --- Modal detail (riwayat & kas) --- */
   .modal-overlay{position:fixed;inset:0;background:rgba(27,36,48,.45);display:none;align-items:flex-end;justify-content:center;z-index:200;padding:0;}
   .modal-overlay.open{display:flex;}
   .modal-sheet{background:var(--paper-card);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:22px 22px 26px;max-height:86vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(27,36,48,.25);animation:modalUp .18s ease-out;}
@@ -169,18 +170,51 @@
   .modal-title{font-family:'Fraunces',serif;font-weight:600;font-size:19px;line-height:1.35;margin:0;}
   .modal-close{background:none;border:1px solid var(--line);border-radius:8px;width:32px;height:32px;flex-shrink:0;cursor:pointer;font-size:16px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;}
   .modal-close:hover{background:var(--grey-soft);}
-  .modal-badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px;}
+  .modal-badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px;align-items:center;}
   .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin-bottom:16px;}
   .modal-field{min-width:0;}
   .modal-field .f-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px;}
   .modal-field .f-value{font-size:14px;font-weight:600;color:var(--ink);word-break:break-word;}
   .modal-note-box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink-soft);font-style:italic;margin-bottom:4px;}
   .modal-note-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
-  @media (max-width:480px){ .modal-grid{grid-template-columns:1fr 1fr;} }
+  #modalActionsWrap{margin-top:6px;}
+  #modalActionsWrap .btn{color:var(--rust);border-color:#e4c5b9;}
+
+  /* --- Kas (uang masuk / keluar) view --- */
+  .cash-summary-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+  .cash-summary-card{flex:1;min-width:140px;background:var(--paper-card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .cash-summary-card .cs-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:6px;}
+  .cash-summary-card .cs-value{font-family:'Fraunces',serif;font-weight:600;font-size:21px;color:var(--ink);word-break:break-word;}
+  .cash-summary-card.in{border-color:#c3ddd3;background:var(--teal-soft);}
+  .cash-summary-card.in .cs-value{color:var(--teal);}
+  .cash-summary-card.out{border-color:#e4c5b9;background:var(--rust-soft);}
+  .cash-summary-card.out .cs-value{color:var(--rust);}
+  .cash-summary-card.balance{background:var(--ink);border-color:var(--ink);}
+  .cash-summary-card.balance .cs-label{color:#B9C0C9;}
+  .cash-summary-card.balance .cs-value{color:var(--paper-card);}
+  .fund-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+  .fund-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;cursor:pointer;}
+  .fund-card-name{font-weight:600;font-size:14px;}
+  .fund-card-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);flex-shrink:0;}
+  .fund-card-amounts{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
+  .fund-card-amounts b{color:var(--ink);}
+  .fund-expense-list{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+  .cash-tx-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;transition:background .15s;}
+  .cash-tx-row:hover{background:var(--grey-soft);}
+  .cash-tx-row .ctx-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+  .cash-tx-row.masuk .ctx-icon{background:var(--teal-soft);color:var(--teal);}
+  .cash-tx-row.keluar .ctx-icon{background:var(--rust-soft);color:var(--rust);}
+  .cash-tx-row .ctx-body{flex:1;min-width:0;}
+  .cash-tx-row .ctx-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cash-tx-row .ctx-meta{font-size:11px;color:var(--ink-soft);}
+  .cash-tx-row .ctx-amount{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;flex-shrink:0;}
+  .cash-tx-row.masuk .ctx-amount{color:var(--teal);}
+  .cash-tx-row.keluar .ctx-amount{color:var(--rust);}
 
   @media (max-width:480px){
     h1{font-size:26px;} select{flex:1 1 100%;} .form-row input[type=time], .form-row input[type=date]{flex:1 1 100%;}
     .stat-label{width:70px;} .view-tab-btn{font-size:11.5px;padding:9px 4px;}
+    .cash-summary-card{min-width:100%;}
   }
 </style>
 </head>
@@ -194,6 +228,7 @@
       <button class="view-tab-btn active" data-view="viewTimeline">📋 Timeline Hari Ini</button>
       <button class="view-tab-btn" data-view="viewInput">✏️ Input &amp; Tugas Rutin</button>
       <button class="view-tab-btn" data-view="viewHistory">🕘 Riwayat</button>
+      <button class="view-tab-btn" data-view="viewCash">💰 Kas</button>
     </div>
   </div>
 
@@ -338,6 +373,7 @@
       <summary>Pengaturan Sinkronisasi Google Sheets (Database Utama)</summary>
       <div class="card" style="margin-top:0;">
         <p style="font-size:12.5px;color:var(--ink-soft);margin-top:0;">Aplikasi ini <b>membaca dan menulis langsung ke Google Sheets</b>. URL Web App sudah ditanam sebagai bawaan (default) di dalam kode, jadi aplikasi ini otomatis terhubung di perangkat mana pun tanpa perlu tempel URL lagi. Ubah kolom di bawah hanya jika Anda ingin memakai spreadsheet lain.</p>
+        <p style="font-size:12.5px;color:var(--rust);margin-top:0;"><b>Penting:</b> karena tab "💰 Kas" menyimpan data baru (sheet "Kas"), pastikan Apps Script di spreadsheet Anda sudah memakai kode terbaru di bawah ini (deploy ulang / "Manage deployments" → naikkan versi baru) agar data Kas ikut tersimpan.</p>
         <ol class="steps">
           <li>Buka Google Sheets baru (boleh kosong).</li>
           <li>Menu <b>Extensions → Apps Script</b>.</li>
@@ -356,6 +392,21 @@
     var data = [];
     for (var i = 1; i < rows.length; i++) {
       data.push({ id: rows[i][0], name: rows[i][1], category: rows[i][2], recurrence: rows[i][3] });
+    }
+    return jsonOutput(data);
+  }
+
+  if (type === 'cash') {
+    var sheet = ss.getSheetByName('Kas');
+    if (!sheet || sheet.getLastRow() < 2) return jsonOutput([]);
+    var rows = sheet.getDataRange().getValues();
+    var data = [];
+    for (var i = 1; i < rows.length; i++) {
+      var r = rows[i];
+      data.push({
+        id: r[0], date: fmtDate(r[1]), txType: r[2], name: r[3],
+        category: r[4], amount: r[5], fundId: r[6], note: r[7]
+      });
     }
     return jsonOutput(data);
   }
@@ -398,6 +449,24 @@ function doPost(e) {
       return jsonOutput({ result: 'deleted' });
     }
     var rowData = [data.id, data.name, data.category, data.recurrence];
+    if (rowIndex > -1) sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+    else sheet.appendRow(rowData);
+    return jsonOutput({ result: 'ok' });
+  }
+
+  if (data.type === 'cash') {
+    var sheet = ss.getSheetByName('Kas') || ss.insertSheet('Kas');
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['ID','Tanggal','Tipe','Nama/Keterangan','Kategori','Jumlah','FundID','Catatan','Diperbarui']);
+    }
+    var rows = sheet.getDataRange().getValues();
+    var rowIndex = -1;
+    for (var i = 1; i < rows.length; i++) { if (rows[i][0] === data.id) { rowIndex = i + 1; break; } }
+    if (data.action === 'delete') {
+      if (rowIndex > -1) sheet.deleteRow(rowIndex);
+      return jsonOutput({ result: 'deleted' });
+    }
+    var rowData = [data.id, data.date, data.txType, data.name, data.category || '', data.amount, data.fundId || '', data.note || '', new Date()];
     if (rowIndex > -1) sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
     else sheet.appendRow(rowData);
     return jsonOutput({ result: 'ok' });
@@ -449,6 +518,85 @@ function doPost(e) {
     </div>
   </div>
 
+  <div class="view-panel" id="viewCash">
+    <div class="cash-summary-row">
+      <div class="cash-summary-card in">
+        <div class="cs-label">Total Uang Masuk</div>
+        <div class="cs-value" id="cashTotalIn">Rp0</div>
+      </div>
+      <div class="cash-summary-card out">
+        <div class="cs-label">Total Pengeluaran</div>
+        <div class="cs-value" id="cashTotalOut">Rp0</div>
+      </div>
+      <div class="cash-summary-card balance">
+        <div class="cs-label">Sisa Saldo</div>
+        <div class="cs-value" id="cashBalance">Rp0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>+ Catat Uang Masuk</h2>
+      <p style="font-size:12px;color:var(--ink-soft);margin-top:-8px;">Contoh: dana yang diberikan Tn. Rudi untuk belanja bahan bangunan.</p>
+      <div class="form-row">
+        <input type="date" id="cashInDate">
+        <input type="text" id="cashInName" placeholder="Sumber / keterangan, mis. Dari Tn. Rudi - Bahan Bangunan" style="flex:1;">
+      </div>
+      <div class="form-row">
+        <input type="number" id="cashInAmount" placeholder="Jumlah (Rp), mis. 2000000" min="0" step="1000">
+        <input type="text" id="cashInNote" placeholder="Catatan (opsional)" style="flex:1;">
+      </div>
+      <button class="btn btn-primary btn-block" id="cashAddInBtn">+ Catat Uang Masuk</button>
+    </div>
+
+    <div class="card">
+      <h2>− Catat Pengeluaran</h2>
+      <p style="font-size:12px;color:var(--ink-soft);margin-top:-8px;">Pilih sumber dana agar saldonya otomatis berkurang.</p>
+      <div class="form-row">
+        <select id="cashFundSelect" style="flex:1;"><option value="">— Kurangi dari Saldo Umum —</option></select>
+      </div>
+      <div class="form-row">
+        <input type="date" id="cashOutDate">
+        <input type="text" id="cashOutName" placeholder="Nama pengeluaran, mis. Beli semen 10 sak" style="flex:1;">
+      </div>
+      <div class="form-row">
+        <select id="cashOutCategory">
+          <option value="Bahan Bangunan">Bahan Bangunan</option>
+          <option value="Upah Tenaga">Upah Tenaga</option>
+          <option value="Transport">Transport</option>
+          <option value="Alat">Alat</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <input type="number" id="cashOutAmount" placeholder="Jumlah (Rp)" min="0" step="1000">
+      </div>
+      <div class="form-row">
+        <input type="text" id="cashOutNote" placeholder="Catatan (opsional)" style="flex:1;">
+      </div>
+      <button class="btn btn-primary btn-block" id="cashAddOutBtn">+ Catat Pengeluaran</button>
+    </div>
+
+    <div class="card">
+      <h2>Rekap per Sumber Dana</h2>
+      <p style="font-size:12px;color:var(--ink-soft);margin-top:-8px;">Klik nama sumber atau pengeluaran untuk lihat rincian.</p>
+      <div id="cashFundList"></div>
+      <div class="empty-state" id="cashFundEmpty" style="display:none;">
+        <div class="glyph">💰</div>
+        <p>Belum ada uang masuk yang tercatat.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Semua Transaksi Kas</h2>
+      <div class="form-row">
+        <input type="text" id="cashSearchInput" placeholder="Cari transaksi kas…" style="flex:1;">
+      </div>
+      <div id="cashAllList"></div>
+      <div class="empty-state" id="cashAllEmpty" style="display:none;">
+        <div class="glyph">💰</div>
+        <p>Belum ada transaksi kas.</p>
+      </div>
+    </div>
+  </div>
+
   <footer class="hint">database: Google Sheets · terhubung lewat Apps Script</footer>
 </div>
 
@@ -461,6 +609,7 @@ function doPost(e) {
     <div class="modal-badges" id="modalBadges"></div>
     <div class="modal-grid" id="modalGrid"></div>
     <div id="modalNoteWrap"></div>
+    <div id="modalActionsWrap"></div>
   </div>
 </div>
 
@@ -478,6 +627,7 @@ let currentDate = todayStr();
 let tasksCache = [];
 let allTasks = [];
 let allTemplates = [];
+let allCash = [];
 let settings = {sheetsUrl:''};
 
 function todayStr(){
@@ -518,6 +668,10 @@ function formatDuration(totalSeconds){
   if(m>0) return m+'m '+s+'d';
   return s+'d';
 }
+function formatRupiah(n){
+  n = Math.round(parseFloat(n)||0);
+  return 'Rp'+n.toLocaleString('id-ID');
+}
 
 /* ---------- TAB NAVIGASI ---------- */
 document.querySelectorAll('.view-tab-btn').forEach(function(btn){
@@ -530,6 +684,7 @@ function switchView(id){
     btn.classList.toggle('active', btn.dataset.view === id);
   });
   if(id === 'viewHistory'){ renderHistory(); }
+  if(id === 'viewCash'){ renderCashAll(); }
   requestAnimationFrame(updateStickyOffset);
 }
 
@@ -566,14 +721,18 @@ async function refreshFromSheets(){
     const tasksJson = await tasksRes.json();
     const tplRes = await fetch(settings.sheetsUrl+'?type=templates');
     const tplJson = await tplRes.json();
+    const cashRes = await fetch(settings.sheetsUrl+'?type=cash');
+    const cashJson = await cashRes.json().catch(function(){ return []; });
     allTasks = Array.isArray(tasksJson) ? tasksJson : [];
     allTemplates = Array.isArray(tplJson) ? tplJson : [];
+    allCash = Array.isArray(cashJson) ? cashJson : [];
     updateSyncStatusUI('ok');
     render();
     renderTemplatesUI();
     runSearch();
     populateHistoryMonthFilter();
     if(document.getElementById('viewHistory').classList.contains('active')){ renderHistory(); }
+    if(document.getElementById('viewCash').classList.contains('active')){ renderCashAll(); } else { populateFundSelect(); }
   }catch(err){
     console.error(err);
     updateSyncStatusUI('error');
@@ -917,39 +1076,242 @@ function renderHistory(){
   });
 }
 
-/* ---------- MODAL DETAIL RIWAYAT ---------- */
-function openHistoryModal(t){
-  const elapsedNum = parseFloat(t.elapsed)||0;
-  document.getElementById('modalTaskName').textContent = t.name || '(Tanpa nama)';
+/* ---------- KAS (Uang Masuk / Keluar) ---------- */
+function computeFundUsed(fundId){
+  return allCash.filter(function(t){ return t.txType==='keluar' && t.fundId===fundId; })
+    .reduce(function(sum,t){ return sum + (parseFloat(t.amount)||0); }, 0);
+}
 
-  const statusInfo = STATUS[t.status] || STATUS.done;
-  const priority = t.priority || 'sedang';
-  document.getElementById('modalBadges').innerHTML =
-    '<span class="status-badge '+t.status+'">'+statusInfo.label+'</span>'+
-    '<span class="priority-badge '+priority+'">'+PRIORITY[priority].label+'</span>'+
-    '<span class="entry-cat" style="align-self:center;">'+escapeHtml(t.category)+'</span>';
+function populateFundSelect(){
+  const sel = document.getElementById('cashFundSelect');
+  if(!sel) return;
+  const current = sel.value;
+  const funds = allCash.filter(function(t){ return t.txType==='masuk'; }).sort(function(a,b){ return b.date.localeCompare(a.date); });
+  sel.innerHTML = '<option value="">— Kurangi dari Saldo Umum —</option>' + funds.map(function(f){
+    const used = computeFundUsed(f.id);
+    const sisa = (parseFloat(f.amount)||0) - used;
+    return '<option value="'+f.id+'">'+escapeHtml(f.name)+' (sisa '+formatRupiah(sisa)+')</option>';
+  }).join('');
+  if(Array.from(sel.options).some(function(o){ return o.value===current; })) sel.value = current;
+}
 
-  const fields = [
-    ['Tanggal Dikerjakan', fmtDateLabel(t.date)],
-    ['Waktu', t.time ? t.time : '—'],
-    ['Durasi Pengerjaan', elapsedNum>0 ? formatDuration(elapsedNum) : '—'],
-    ['Tenggat', t.deadline ? fmtDateLabel(t.deadline) : '—']
-  ];
-  document.getElementById('modalGrid').innerHTML = fields.map(function(f){
+function renderCashAll(){
+  renderCashSummary();
+  renderCashFunds();
+  renderCashTxList();
+  populateFundSelect();
+}
+
+function renderCashSummary(){
+  const totalIn = allCash.filter(function(t){ return t.txType==='masuk'; }).reduce(function(s,t){ return s+(parseFloat(t.amount)||0); },0);
+  const totalOut = allCash.filter(function(t){ return t.txType==='keluar'; }).reduce(function(s,t){ return s+(parseFloat(t.amount)||0); },0);
+  document.getElementById('cashTotalIn').textContent = formatRupiah(totalIn);
+  document.getElementById('cashTotalOut').textContent = formatRupiah(totalOut);
+  document.getElementById('cashBalance').textContent = formatRupiah(totalIn-totalOut);
+}
+
+function renderCashFunds(){
+  const wrap = document.getElementById('cashFundList');
+  const empty = document.getElementById('cashFundEmpty');
+  const funds = allCash.filter(function(t){ return t.txType==='masuk'; }).sort(function(a,b){ return b.date.localeCompare(a.date); });
+  wrap.innerHTML = '';
+  if(funds.length===0){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  funds.forEach(function(f){
+    const used = computeFundUsed(f.id);
+    const total = parseFloat(f.amount)||0;
+    const sisa = total-used;
+    const pct = total>0 ? Math.min(100, Math.round(used/total*100)) : 0;
+    const expenses = allCash.filter(function(t){ return t.txType==='keluar' && t.fundId===f.id; }).sort(function(a,b){ return b.date.localeCompare(a.date); });
+    const card = document.createElement('div');
+    card.className = 'fund-card';
+    let expensesHtml = '';
+    if(expenses.length){
+      expensesHtml = '<div class="fund-expense-list">' + expenses.map(function(e){
+        return '<div class="cash-tx-row keluar" data-id="'+e.id+'"><div class="ctx-icon">−</div><div class="ctx-body"><div class="ctx-name">'+escapeHtml(e.name)+'</div><div class="ctx-meta">'+escapeHtml(e.category||'')+' · '+fmtDateShort(e.date)+'</div></div><div class="ctx-amount">'+formatRupiah(e.amount)+'</div></div>';
+      }).join('') + '</div>';
+    }
+    card.innerHTML =
+      '<div class="fund-card-top"><span class="fund-card-name">'+escapeHtml(f.name)+'</span><span class="fund-card-date">'+fmtDateShort(f.date)+'</span></div>'+
+      '<div class="progress-bar-track" style="background:var(--grey-soft);"><div class="progress-bar-fill" style="width:'+pct+'%;background:var(--rust);"></div></div>'+
+      '<div class="fund-card-amounts"><span>Masuk: <b>'+formatRupiah(total)+'</b></span><span>Terpakai: <b>'+formatRupiah(used)+'</b></span><span>Sisa: <b>'+formatRupiah(sisa)+'</b></span></div>'+
+      expensesHtml;
+    card.querySelector('.fund-card-top').addEventListener('click', function(){ openCashModal(f); });
+    card.querySelectorAll('.cash-tx-row').forEach(function(row){
+      row.addEventListener('click', function(){
+        const tx = allCash.find(function(x){ return x.id===row.dataset.id; });
+        if(tx) openCashModal(tx);
+      });
+    });
+    wrap.appendChild(card);
+  });
+}
+
+function renderCashTxList(){
+  const wrap = document.getElementById('cashAllList');
+  const empty = document.getElementById('cashAllEmpty');
+  const query = document.getElementById('cashSearchInput').value.trim().toLowerCase();
+  let list = allCash.slice();
+  if(query) list = list.filter(function(t){ return t.name && t.name.toLowerCase().includes(query); });
+  list.sort(function(a,b){ return b.date.localeCompare(a.date); });
+  wrap.innerHTML = '';
+  if(list.length===0){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.forEach(function(t){
+    const row = document.createElement('div');
+    row.className = 'cash-tx-row '+t.txType;
+    row.innerHTML =
+      '<div class="ctx-icon">'+(t.txType==='masuk'?'+':'−')+'</div>'+
+      '<div class="ctx-body"><div class="ctx-name">'+escapeHtml(t.name)+'</div><div class="ctx-meta">'+(t.txType==='masuk'?'Uang Masuk':escapeHtml(t.category||'Pengeluaran'))+' · '+fmtDateShort(t.date)+'</div></div>'+
+      '<div class="ctx-amount">'+(t.txType==='masuk'?'+':'-')+formatRupiah(t.amount)+'</div>';
+    row.addEventListener('click', function(){ openCashModal(t); });
+    wrap.appendChild(row);
+  });
+}
+
+async function addCashIncome(){
+  const date = document.getElementById('cashInDate').value || todayStr();
+  const name = document.getElementById('cashInName').value.trim();
+  const amount = parseFloat(document.getElementById('cashInAmount').value);
+  const note = document.getElementById('cashInNote').value.trim();
+  if(!name){ document.getElementById('cashInName').focus(); return; }
+  if(!amount || amount<=0){ document.getElementById('cashInAmount').focus(); return; }
+  const newTx = {id:uid(), date:date, txType:'masuk', name:name, category:'', amount:amount, fundId:'', note:note};
+  const ok = await postToSheets(Object.assign({}, newTx, {type:'cash', action:'upsert'}));
+  if(ok){
+    allCash.push(newTx);
+    document.getElementById('cashInName').value='';
+    document.getElementById('cashInAmount').value='';
+    document.getElementById('cashInNote').value='';
+    document.getElementById('cashInDate').value='';
+    renderCashAll();
+  }
+}
+
+async function addCashExpense(){
+  const fundId = document.getElementById('cashFundSelect').value;
+  const date = document.getElementById('cashOutDate').value || todayStr();
+  const name = document.getElementById('cashOutName').value.trim();
+  const category = document.getElementById('cashOutCategory').value;
+  const amount = parseFloat(document.getElementById('cashOutAmount').value);
+  const note = document.getElementById('cashOutNote').value.trim();
+  if(!name){ document.getElementById('cashOutName').focus(); return; }
+  if(!amount || amount<=0){ document.getElementById('cashOutAmount').focus(); return; }
+
+  if(fundId){
+    const fund = allCash.find(function(t){ return t.id===fundId; });
+    if(fund){
+      const used = computeFundUsed(fundId);
+      const sisa = (parseFloat(fund.amount)||0) - used;
+      if(amount > sisa){
+        const proceed = confirm('Jumlah pengeluaran ('+formatRupiah(amount)+') melebihi sisa saldo dari sumber ini ('+formatRupiah(sisa)+').\n\nTetap catat pengeluaran ini?');
+        if(!proceed) return;
+      }
+    }
+  }
+
+  const newTx = {id:uid(), date:date, txType:'keluar', name:name, category:category, amount:amount, fundId:fundId||'', note:note};
+  const ok = await postToSheets(Object.assign({}, newTx, {type:'cash', action:'upsert'}));
+  if(ok){
+    allCash.push(newTx);
+    document.getElementById('cashOutName').value='';
+    document.getElementById('cashOutAmount').value='';
+    document.getElementById('cashOutNote').value='';
+    document.getElementById('cashOutDate').value='';
+    renderCashAll();
+  }
+}
+
+async function deleteCashTx(id){
+  const ok = await postToSheets({id:id, type:'cash', action:'delete'});
+  if(ok){
+    allCash = allCash.filter(function(t){ return t.id!==id; });
+    renderCashAll();
+    closeHistoryModal();
+  }
+}
+
+/* ---------- MODAL DETAIL (generik: riwayat & kas) ---------- */
+function openDetailModal(opts){
+  document.getElementById('modalTaskName').textContent = opts.title || '(Tanpa nama)';
+  document.getElementById('modalBadges').innerHTML = opts.badgesHtml || '';
+  document.getElementById('modalGrid').innerHTML = (opts.fields||[]).map(function(f){
     return '<div class="modal-field"><div class="f-label">'+f[0]+'</div><div class="f-value">'+escapeHtml(f[1])+'</div></div>';
   }).join('');
-
   const noteWrap = document.getElementById('modalNoteWrap');
-  noteWrap.innerHTML = t.note
-    ? '<div class="modal-note-label">Catatan</div><div class="modal-note-box">'+escapeHtml(t.note)+'</div>'
+  noteWrap.innerHTML = opts.note
+    ? '<div class="modal-note-label">Catatan</div><div class="modal-note-box">'+escapeHtml(opts.note)+'</div>'
     : '';
-
+  const actionsWrap = document.getElementById('modalActionsWrap');
+  actionsWrap.innerHTML = '';
+  if(opts.onDelete){
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-ghost btn-block';
+    btn.textContent = 'Hapus Transaksi Ini';
+    btn.addEventListener('click', function(){
+      if(confirm('Hapus transaksi ini? Tindakan ini tidak bisa dibatalkan.')) opts.onDelete();
+    });
+    actionsWrap.appendChild(btn);
+  }
   document.getElementById('historyModalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeHistoryModal(){
   document.getElementById('historyModalOverlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+function openHistoryModal(t){
+  const elapsedNum = parseFloat(t.elapsed)||0;
+  const statusInfo = STATUS[t.status] || STATUS.done;
+  const priority = t.priority || 'sedang';
+  openDetailModal({
+    title: t.name,
+    badgesHtml:
+      '<span class="status-badge '+t.status+'">'+statusInfo.label+'</span>'+
+      '<span class="priority-badge '+priority+'">'+PRIORITY[priority].label+'</span>'+
+      '<span class="entry-cat" style="align-self:center;">'+escapeHtml(t.category)+'</span>',
+    fields: [
+      ['Tanggal Dikerjakan', fmtDateLabel(t.date)],
+      ['Waktu', t.time ? t.time : '—'],
+      ['Durasi Pengerjaan', elapsedNum>0 ? formatDuration(elapsedNum) : '—'],
+      ['Tenggat', t.deadline ? fmtDateLabel(t.deadline) : '—']
+    ],
+    note: t.note
+  });
+}
+
+function openCashModal(t){
+  const isFund = t.txType === 'masuk';
+  const used = isFund ? computeFundUsed(t.id) : 0;
+  const sisa = isFund ? (parseFloat(t.amount)||0) - used : null;
+  const badgesHtml =
+    '<span class="status-badge" style="background:'+(isFund?'var(--teal)':'var(--rust)')+';">'+(isFund?'Uang Masuk':'Pengeluaran')+'</span>'+
+    (!isFund ? '<span class="priority-badge sedang">'+escapeHtml(t.category||'Lainnya')+'</span>' : '');
+  let fields;
+  if(isFund){
+    fields = [
+      ['Tanggal', fmtDateLabel(t.date)],
+      ['Jumlah Masuk', formatRupiah(t.amount)],
+      ['Terpakai', formatRupiah(used)],
+      ['Sisa Saldo', formatRupiah(sisa)]
+    ];
+  } else {
+    const f = t.fundId ? allCash.find(function(x){ return x.id===t.fundId; }) : null;
+    fields = [
+      ['Tanggal', fmtDateLabel(t.date)],
+      ['Jumlah', formatRupiah(t.amount)],
+      ['Kategori', t.category || '—'],
+      ['Sumber Dana', f ? f.name : 'Saldo Umum']
+    ];
+  }
+  openDetailModal({
+    title: t.name,
+    badgesHtml: badgesHtml,
+    fields: fields,
+    note: t.note,
+    onDelete: function(){ deleteCashTx(t.id); }
+  });
 }
 
 /* ---------- INPUT AKTIVITAS ---------- */
@@ -1130,6 +1492,9 @@ document.getElementById('exportCsvBtn').addEventListener('click', exportAllCSV);
 document.getElementById('statsRefreshBtn').addEventListener('click', renderStats);
 document.getElementById('historySearchInput').addEventListener('input', renderHistory);
 document.getElementById('historyMonthFilter').addEventListener('change', renderHistory);
+document.getElementById('cashAddInBtn').addEventListener('click', addCashIncome);
+document.getElementById('cashAddOutBtn').addEventListener('click', addCashExpense);
+document.getElementById('cashSearchInput').addEventListener('input', renderCashTxList);
 document.getElementById('copyCodeBtn').addEventListener('click', function(){
   const code = document.getElementById('appsScriptCode').textContent;
   navigator.clipboard.writeText(code).then(function(){
