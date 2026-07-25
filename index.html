@@ -534,45 +534,49 @@ function doPost(e) {
       </div>
     </div>
 
-    <div class="card">
-      <h2>+ Catat Uang Masuk</h2>
-      <p style="font-size:12px;color:var(--ink-soft);margin-top:-8px;">Contoh: dana yang diberikan Tn. Rudi untuk belanja bahan bangunan.</p>
-      <div class="form-row">
-        <input type="date" id="cashInDate">
-        <input type="text" id="cashInName" placeholder="Sumber / keterangan, mis. Dari Tn. Rudi - Bahan Bangunan" style="flex:1;">
+    <details class="tpl">
+      <summary>+ Catat Uang Masuk</summary>
+      <div class="card" style="margin-top:0;">
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:0;">Contoh: dana yang diberikan Tn. Rudi untuk belanja bahan bangunan.</p>
+        <div class="form-row">
+          <input type="date" id="cashInDate">
+          <input type="text" id="cashInName" placeholder="Sumber / keterangan, mis. Dari Tn. Rudi - Bahan Bangunan" style="flex:1;">
+        </div>
+        <div class="form-row">
+          <input type="number" id="cashInAmount" placeholder="Jumlah (Rp), mis. 2000000" min="0" step="1000">
+          <input type="text" id="cashInNote" placeholder="Catatan (opsional)" style="flex:1;">
+        </div>
+        <button class="btn btn-primary btn-block" id="cashAddInBtn">+ Catat Uang Masuk</button>
       </div>
-      <div class="form-row">
-        <input type="number" id="cashInAmount" placeholder="Jumlah (Rp), mis. 2000000" min="0" step="1000">
-        <input type="text" id="cashInNote" placeholder="Catatan (opsional)" style="flex:1;">
-      </div>
-      <button class="btn btn-primary btn-block" id="cashAddInBtn">+ Catat Uang Masuk</button>
-    </div>
+    </details>
 
-    <div class="card">
-      <h2>− Catat Pengeluaran</h2>
-      <p style="font-size:12px;color:var(--ink-soft);margin-top:-8px;">Pilih sumber dana agar saldonya otomatis berkurang.</p>
-      <div class="form-row">
-        <select id="cashFundSelect" style="flex:1;"><option value="">— Kurangi dari Saldo Umum —</option></select>
+    <details class="tpl">
+      <summary>− Catat Pengeluaran</summary>
+      <div class="card" style="margin-top:0;">
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:0;">Pilih sumber dana agar saldonya otomatis berkurang.</p>
+        <div class="form-row">
+          <select id="cashFundSelect" style="flex:1;"><option value="">— Kurangi dari Saldo Umum —</option></select>
+        </div>
+        <div class="form-row">
+          <input type="date" id="cashOutDate">
+          <input type="text" id="cashOutName" placeholder="Nama pengeluaran, mis. Beli semen 10 sak" style="flex:1;">
+        </div>
+        <div class="form-row">
+          <select id="cashOutCategory">
+            <option value="Bahan Bangunan">Bahan Bangunan</option>
+            <option value="Upah Tenaga">Upah Tenaga</option>
+            <option value="Transport">Transport</option>
+            <option value="Alat">Alat</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+          <input type="number" id="cashOutAmount" placeholder="Jumlah (Rp)" min="0" step="1000">
+        </div>
+        <div class="form-row">
+          <input type="text" id="cashOutNote" placeholder="Catatan (opsional)" style="flex:1;">
+        </div>
+        <button class="btn btn-primary btn-block" id="cashAddOutBtn">+ Catat Pengeluaran</button>
       </div>
-      <div class="form-row">
-        <input type="date" id="cashOutDate">
-        <input type="text" id="cashOutName" placeholder="Nama pengeluaran, mis. Beli semen 10 sak" style="flex:1;">
-      </div>
-      <div class="form-row">
-        <select id="cashOutCategory">
-          <option value="Bahan Bangunan">Bahan Bangunan</option>
-          <option value="Upah Tenaga">Upah Tenaga</option>
-          <option value="Transport">Transport</option>
-          <option value="Alat">Alat</option>
-          <option value="Lainnya">Lainnya</option>
-        </select>
-        <input type="number" id="cashOutAmount" placeholder="Jumlah (Rp)" min="0" step="1000">
-      </div>
-      <div class="form-row">
-        <input type="text" id="cashOutNote" placeholder="Catatan (opsional)" style="flex:1;">
-      </div>
-      <button class="btn btn-primary btn-block" id="cashAddOutBtn">+ Catat Pengeluaran</button>
-    </div>
+    </details>
 
     <details class="tpl">
       <summary>Rekap per Sumber Dana</summary>
