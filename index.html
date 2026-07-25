@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Log Kerja ISakuiki</title>
+<title>Log Kerja Harian</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -574,27 +574,31 @@ function doPost(e) {
       <button class="btn btn-primary btn-block" id="cashAddOutBtn">+ Catat Pengeluaran</button>
     </div>
 
-    <div class="card">
-      <h2>Rekap per Sumber Dana</h2>
-      <p style="font-size:12px;color:var(--ink-soft);margin-top:-8px;">Klik nama sumber atau pengeluaran untuk lihat rincian.</p>
-      <div id="cashFundList"></div>
-      <div class="empty-state" id="cashFundEmpty" style="display:none;">
-        <div class="glyph">💰</div>
-        <p>Belum ada uang masuk yang tercatat.</p>
+    <details class="tpl">
+      <summary>Rekap per Sumber Dana</summary>
+      <div class="card" style="margin-top:0;">
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:0;">Klik nama sumber atau pengeluaran untuk lihat rincian.</p>
+        <div id="cashFundList"></div>
+        <div class="empty-state" id="cashFundEmpty" style="display:none;">
+          <div class="glyph">💰</div>
+          <p>Belum ada uang masuk yang tercatat.</p>
+        </div>
       </div>
-    </div>
+    </details>
 
-    <div class="card">
-      <h2>Semua Transaksi Kas</h2>
-      <div class="form-row">
-        <input type="text" id="cashSearchInput" placeholder="Cari transaksi kas…" style="flex:1;">
+    <details class="tpl">
+      <summary>Semua Transaksi Kas</summary>
+      <div class="card" style="margin-top:0;">
+        <div class="form-row">
+          <input type="text" id="cashSearchInput" placeholder="Cari transaksi kas…" style="flex:1;">
+        </div>
+        <div id="cashAllList"></div>
+        <div class="empty-state" id="cashAllEmpty" style="display:none;">
+          <div class="glyph">💰</div>
+          <p>Belum ada transaksi kas.</p>
+        </div>
       </div>
-      <div id="cashAllList"></div>
-      <div class="empty-state" id="cashAllEmpty" style="display:none;">
-        <div class="glyph">💰</div>
-        <p>Belum ada transaksi kas.</p>
-      </div>
-    </div>
+    </details>
   </div>
 
   <footer class="hint">database: Google Sheets · terhubung lewat Apps Script</footer>
